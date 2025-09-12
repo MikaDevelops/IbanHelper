@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="./js/IbanHelper.js"></script>
+    <script>
+        const ibanHelper = new IbanHelper();
+        console.log(ibanHelper.checkIban("ee6655555"));
+    </script>
+
+
+</head>
+<body>
+    <div>
+        <h1>Check modulo 97</h1>
+        <input type="text"><br><button id="buttonCheckk">Check mod97</button>
+        <div id="mod97calcResults">jou</div>
+
+    </div>
+    <div>
+        <h1>Create 30 random not BBAN good mod97 good ibans</h1>
+        <div id="randomIbanResults">jou</div>
+    </div>
+</body>
+</html>
