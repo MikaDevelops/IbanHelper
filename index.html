@@ -7,15 +7,24 @@
     <script src="./js/IbanHelper.js"></script>
     <script>
         const ibanHelper = new IbanHelper();
-        console.log(ibanHelper.checkIban("ee6655555"));
+        function check(){
+            let ibanForChecking = document.getElementById('ibanToCheck').value;
+            let resultElement = document.getElementById('mod97calcResults');
+            let ibanCorrect = ibanHelper.checkIban(ibanForChecking);
+            if (ibanCorrect) {
+                
+                resultElement.innerHTML = `${ibanForChecking} mod(97) = 1 <span style="color:green;">(passed)</span>`;
+            }
+            else {
+                resultElement.innerHTML = `${ibanForChecking} mod(97) =/= 1 <span style="color:red; font-weight:bold;">(NOT PASSED)</span>`;
+            }
+        }
     </script>
-
-
 </head>
 <body>
     <div>
         <h1>Check modulo 97</h1>
-        <input type="text"><br><button id="buttonCheckk">Check mod97</button>
+        <input type="text" id="ibanToCheck"><br><button id="buttonCheckk" onclick="check();">Check mod97</button>
         <div id="mod97calcResults">jou</div>
 
     </div>
