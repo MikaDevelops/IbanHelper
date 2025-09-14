@@ -75,6 +75,7 @@ class IbanHelper{
         "AE",
         "GB",
         "VA",
+        "RU",
         "VG"
     ];
 
@@ -83,6 +84,7 @@ class IbanHelper{
         let countryCode = this.#numberFromCoutryCode(ibanToCheck);
         let checkNums = ibanToCheck.slice(2,4);
         let theRest = ibanToCheck.slice(4);
+        if ( theRest.search(/[a-zA-Z]/) > -1 ) theRest = this.#convertLettersToNumbers(theRest);
         let checkableNum = theRest + countryCode+ checkNums;
         return this.#checkMod(checkableNum);
     }
@@ -100,8 +102,13 @@ class IbanHelper{
         return countryCode;
     }
 
-    #checkMod(num){
+    #charToNum(character){
+        character = character.toUpperCase();
+        character = String(character.codePointAt(0)-55);
+        return character;
+    }
 
+    #checkMod(num){
         let startPart = "";
         let pointer = 0;
         let endPointer = 0;
@@ -117,12 +124,12 @@ class IbanHelper{
         if (startPart === '1') return true;
         else return false;
     }
+
+    #convertLettersToNumbers(theNum){
+        let arrayOfChars = theNum.split("");
+        for (let i = 0; i < arrayOfChars.length; i++){
+            if (arrayOfChars[i].search(/[a-zA-Z]/i)>-1) arrayOfChars[i] = this.#charToNum(arrayOfChars[i]);
+        }
+        return arrayOfChars.join("");
+    }
 }
-
-/*
-0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21
-5 3 0 4 9 5 3 4 2 3  4  2  3  4  6  7  1  8  9  8  7  7
-^                 ^
-                  ^              ^
-
-*/
