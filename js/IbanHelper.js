@@ -89,6 +89,17 @@ class IbanHelper{
         return this.#checkMod(checkableNum);
     }
 
+    createIban(countrycode, bankCode, bban){
+        let countryCodeNum = this.#numberFromCoutryCode(countrycode);
+        let bankCodeNum = bankCode.search(/[a-zA-Z]/) > -1 ? this.#convertLettersToNumbers(bankCode) : bankCode;
+        let bbanNum = bban.search(/[a-zA-Z]/) > -1 ? this.#convertLettersToNumbers(bban) : bban;
+        let rawNumber = bankCodeNum + bbanNum + countryCodeNum + "00";
+        let modNum = this.#countMod97(rawNumber);
+        let checkNum = String(98 - Number(modNum));
+        let ibanNum = countrycode + checkNum + bankCode + bban;
+        return ibanNum;
+    }
+
     #checkTehCountryCode(ibanToCheck){
         let countryCode = ibanToCheck.slice(0,2);
         countryCode=countryCode.toUpperCase();
@@ -109,6 +120,13 @@ class IbanHelper{
     }
 
     #checkMod(num){
+        
+        let modNum = this.#countMod97(num);
+        if (modNum === '1') return true;
+        else return false;
+    }
+
+    #countMod97(num){
         let startPart = "";
         let pointer = 0;
         let endPointer = 0;
@@ -120,9 +138,7 @@ class IbanHelper{
             pointer = endPointer;
             if (pointer >= num.length) break; 
         }
-        
-        if (startPart === '1') return true;
-        else return false;
+        return startPart;
     }
 
     #convertLettersToNumbers(theNum){

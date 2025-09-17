@@ -6,6 +6,14 @@
     <title>Document</title>
     <script src="./js/IbanHelper.js"></script>
     <script>
+        const bankCodeLengths = new Map([
+            ["EE",2],
+            ["FI",3]
+        ]);
+        const bbanLengths = new Map([
+            ["EE", 14],
+            ["FI", 11]
+        ]);
         const ibanHelper = new IbanHelper();
         function check(){
             let ibanForChecking = document.getElementById('ibanToCheck').value;
@@ -19,18 +27,55 @@
                 resultElement.innerHTML = `${ibanForChecking} mod(97) =/= 1 <span style="color:red; font-weight:bold;">(NOT PASSED)</span>`;
             }
         }
+        function checkAccountNum(input){
+            let chosenCountry = document.getElementById('countryCode').value;
+            switch(input.id){
+
+                case "bank_code":
+                    let bankCodeLength = bankCodeLengths.get(chosenCountry);
+                    if(input.value.length !== bankCodeLength) document.getElementById('notification_bank_code').innerHTML=
+                        `length is ${input.value.length}, should be ${bankCodeLength}`;
+                    else document.getElementById('notification_bank_code').innerHTML="";
+                break;
+
+                case "bban":
+                    let bbanLen = bbanLengths.get(chosenCountry);
+                    if(input.value.length !== bbanLen) document.getElementById('notification_bban').innerHTML=
+                        `length is ${input.value.length}, should be ${bbanLen}`;
+                    else document.getElementById('notification_bban').innerHTML="";
+                    break;
+            }
+        }
+        function generateIban(){
+            let newIban = ibanHelper.createIban(
+                document.getElementById('countryCode').value,
+                document.getElementById('bank_code').value,
+                document.getElementById('bban').value
+            );
+            document.getElementById('singleIbanResults').innerHTML=newIban;
+        }
     </script>
 </head>
 <body>
     <div>
         <h1>Check modulo 97</h1>
         <input type="text" id="ibanToCheck"><br><button id="buttonCheckk" onclick="check();">Check mod97</button>
-        <div id="mod97calcResults">jou</div>
+        <div id="mod97calcResults"></div>
 
     </div>
     <div>
-        <h1>Create 30 random not BBAN good mod97 good ibans</h1>
-        <div id="randomIbanResults">jou</div>
+        <h1>Generate iban</h1>
+        <div id = "random_form">
+            country code, bank number, account number<br>
+            <select name="countrycode" id = "countryCode">
+                <option value="FI">FI</option>
+                <option value="EE">EE</option>
+            </select>
+            <input type="text" id="bank_code" onkeyup="checkAccountNum(this)"><span id="notification_bank_code"></span>
+            <input type="text" id="bban" onkeyup="checkAccountNum(this)"><span id="notification_bban"></span>
+            <button id="generate_button" onclick="generateIban()">generate</button>
+        </div>
+        <div id="singleIbanResults"></div>
     </div>
 </body>
 </html>
