@@ -96,6 +96,7 @@ class IbanHelper{
         let rawNumber = bankCodeNum + bbanNum + countryCodeNum + "00";
         let modNum = this.#countMod97(rawNumber);
         let checkNum = String(98 - Number(modNum));
+        if (Number(checkNum)<10) checkNum = "0"+checkNum;
         let ibanNum = countrycode + checkNum + bankCode + bban;
         return ibanNum;
     }
